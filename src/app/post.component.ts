@@ -1,19 +1,19 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, computed, signal } from '@angular/core';
-import { CardModule } from 'primeng/card';
-import { Post, PostComment, User } from './types';
-import { PanelModule } from 'primeng/panel';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, computed, input } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
 import { GetUserByEmailPipe } from './get-user-by-email.pipe';
+import { Post, PostComment, User } from './types';
 
 @Component({
   selector: 'app-post',
   template: `
-    @if (postVM()) {
+    @if (post()) {
     <p-card
       [subheader]="
-        postVM().user.name +
+        post().user.name +
         ' (' +
-        postVM().user.email +
+        post().user.email +
         ')'
       "
     >
@@ -52,26 +52,16 @@ import { GetUserByEmailPipe } from './get-user-by-email.pipe';
   imports: [CardModule, PanelModule, ButtonModule, GetUserByEmailPipe],
 })
 export class PostComponent {
-  @Input({ required: true, alias: 'post' })
-  set _post(post: Post) {
-    this.post.set(post);
-  }
-  @Input({ required: true, alias: 'comments' }) set _comments(comments: PostComment[]) {
-    this.comments.set(comments);
-  };
-  @Input({ required: true, alias: 'users' }) set _users(users: User[]) {
-    this.users.set(users);
-  };
+  postItem = input.required<Post>({alias: 'post'});
+  comments = input.required<PostComment[]>();
+  users = input.required<User[]>();
   @Output() postDeleted = new EventEmitter<number>();
 
-  post = signal<Post | null>(null);
-  comments = signal<PostComment[]>([]);
-  users = signal<User[]>([]);
-  postVM = computed(() => {
+  post = computed(() => {
     return ({
-        ...this.post(),
-        user: this.getUserById(this.post()!.userId),
-        comments: this.getPostComments(this.post()!.id),
+        ...this.postItem(),
+        user: this.getUserById(this.postItem()!.userId),
+        comments: this.getPostComments(this.postItem()!.id),
     });
   });
 

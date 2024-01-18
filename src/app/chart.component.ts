@@ -3,12 +3,12 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    Input,
     NgZone,
     OnChanges,
     OnInit,
     ViewChild,
     inject,
+    input,
 } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { PanelModule } from 'primeng/panel';
@@ -29,9 +29,9 @@ import { Post, PostComment, User } from './types';
 })
 export class ChartComponent implements OnChanges, AfterViewInit, OnInit {
   @ViewChild('chart') chartEl!: ElementRef<HTMLCanvasElement>;
-  @Input() posts: Post[] = [];
-  @Input() users: User[] = [];
-  @Input() comments: PostComment[] = [];
+  posts = input<Post[]>([]);
+  users = input<User[]>([]);
+  comments = input<PostComment[]>([]);
   private readonly ngZone = inject(NgZone);
   chart!: Chart;
 

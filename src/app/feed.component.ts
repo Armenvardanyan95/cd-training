@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, input } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { PostComponent } from './post.component';
 import { Post, PostComment, User } from './types';
@@ -8,8 +8,8 @@ import { Post, PostComment, User } from './types';
   standalone: true,
   template: `
     <p-panel header="Feed">
-      @for (post of posts; track post.id) {
-        <app-post [post]="post" [comments]="comments" [users]="users" (postDeleted)="deletePost($event)" />
+      @for (post of posts(); track post.id) {
+        <app-post [post]="post" [comments]="comments()" [users]="users()" (postDeleted)="deletePost($event)" />
       }
     </p-panel>
   `,
@@ -17,9 +17,9 @@ import { Post, PostComment, User } from './types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FeedComponent {
-  @Input() posts: Post[] = [];
-  @Input() users: User[] = [];
-  @Input() comments: PostComment[] = [];
+  posts = input<Post[]>([]);
+  users = input<User[]>([]);
+  comments = input<PostComment[]>([]);
   @Output() postDeleted = new EventEmitter<number>();
 
   deletePost(postId: number): void {
