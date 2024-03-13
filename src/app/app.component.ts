@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -27,7 +27,7 @@ import { Post } from './types';
     <app-chart [posts]="posts()" [comments]="comments()" [users]="users()" />
     <app-feed [posts]="posts()" [comments]="comments()" [users]="users()" (postDeleted)="deletePost($event)" />
   `,
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   private readonly dataService = inject(DataService);
